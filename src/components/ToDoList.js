@@ -16,7 +16,7 @@ const ToDoList = ({ todos, setTodos, filteredTodos }) => {
                             key={todo.id} 
                             todo={todo}
                         />
-                    ))};
+                    ))}
                 </ul>
             </div>
         );
