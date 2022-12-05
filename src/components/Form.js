@@ -1,18 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { collection, addDoc, getCountFromServer } from "firebase/firestore";
+import {db} from '../firebase';
 
 // form component 
-const Form = ({setTextInput, todos, setTodos, textInput, setStatus}) => {
+const Form = ({setTextInput, todos, setTodos, textInput, setStatus, totalTasks, setTotalTasks}) => {
     // JS
+    useEffect(() => {
+        renderTaskCount();
+    }, [todos]);
+
     // updates textInput state to the user input
     const textInputHandler = (e) => {
         setTextInput(e.target.value);   // pass text input to setInputText function
     }
-
-    // updates the todos array in state with the addition of the new todo added
-    const submitTodoHandler = (e) => {
-        e.preventDefault(); // prevents page refresh
-        setTodos([...todos, { text: textInput, completed: false, id: Math.random() * 100 }]);
-        setTextInput("");   // reset todo input
+    
+    const addTodo = async (e) => {
+        e.preventDefault();
+       
+        try {
+            const docRef = await addDoc(collection(db, "todos"), {
+                todo: textInput,
+            });
+            console.log("Document written with ID: ", docRef.id);
+            setTodos([...todos, { text: textInput, completed: false, id: Math.random() * 100 }]);
+            setTextInput("");   // reset todo input
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
     }
 
     // updates status in state
@@ -20,11 +34,17 @@ const Form = ({setTextInput, todos, setTodos, textInput, setStatus}) => {
         setStatus(e.target.value);
     }
 
+    const renderTaskCount = async () => {
+        const coll = collection(db, "todos");
+        const snapshot = await getCountFromServer(coll);
+        setTotalTasks(snapshot.data().count);
+    }
+
     // HTML
     return (
         <form>
             <input value={textInput} onChange={textInputHandler} type="text" className="todo-input" />
-            <button onClick={submitTodoHandler} className="todo-button" type="submit">
+            <button onClick={addTodo} className="todo-button" type="submit">
                 <i className="fas fa-plus-square"></i>
             </button>
             <div className="select">

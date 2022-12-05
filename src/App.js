@@ -10,6 +10,7 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [status, setStatus] = useState("all");
   const [filteredTodos, setFilteredTodos] = useState([]);
+  const [totalTasks, setTotalTasks] = useState("");
 
   // this function will only run once when the app is first loaded, and it retrieves the todos in the local storage
   useEffect(() => {
@@ -56,14 +57,18 @@ function App() {
   return (
     <div className="App">
       <header>
-        <h1>Michael's To-Do List</h1>
+        <h1>To-Do List</h1>
       </header>
+      <h1>All-Time Tasks Made By The Community: {totalTasks}</h1>
+
       <Form 
         todos={todos} 
         setTodos={setTodos} 
         textInput={textInput} 
         setTextInput={setTextInput}
         setStatus={setStatus}
+        totalTasks={totalTasks}
+        setTotalTasks={setTotalTasks}
       />
       <ToDoList 
         setTodos={setTodos} 
