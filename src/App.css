@@ -9,6 +9,11 @@ body {
   font-family: "Poppins", sans-serif;
   min-height: 100vh;
 }
+
+h1 {
+  text-align: center;
+}
+
 header {
   font-size: 2rem;
 }
